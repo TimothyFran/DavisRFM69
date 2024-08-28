@@ -240,7 +240,7 @@ void DavisRFM69::sleep() {
   setMode(RF69_MODE_SLEEP);
 }
 
-void DavisRFM69::isr0() { selfPointer->interruptHandler(); }
+void DavisRFM69::isr0() { _isrFlag = true; }
 
 void DavisRFM69::receiveBegin() {
   _packetReceived = false;
@@ -361,6 +361,13 @@ void DavisRFM69::rcCalibration()
 {
   writeReg(REG_OSC1, RF_OSC1_RCCAL_START);
   while ((readReg(REG_OSC1) & RF_OSC1_RCCAL_DONE) == 0x00);
+}
+
+void DavisRFM69::loop() {
+  if (_isrFlag) {
+    _isrFlag = false;
+    selfPointer->interruptHandler();
+  }
 }
 
 // vim: et:sts=2:ts=2:sw=2

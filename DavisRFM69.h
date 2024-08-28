@@ -129,11 +129,14 @@ class DavisRFM69 {
     void writeReg(uint8_t addr, uint8_t val);
     void readAllRegs();
 
+    void loop();
+
   protected:
     void virtual interruptHandler();
     void sendFrame(const void* buffer, uint8_t size);
     uint8_t reverseBits(uint8_t b);
 
+    static volatile bool _isrFlag;
     static void isr0();
 
     static DavisRFM69* selfPointer;
